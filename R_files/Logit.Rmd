@@ -1,0 +1,81 @@
+---
+title: "Logit"
+author: "Aaron Rockwell"
+date: "2/25/2020"
+output: pdf_document
+---
+
+```{r loadfile}
+library(ResourceSelection)
+library(MASS)
+library(logistf)
+library(dplyr)
+
+df = data.frame(read.csv("train.csv"))
+
+df = subset(df, select = -c(y_percent_return_over_investment))
+
+head(df)
+```
+
+```{r train_test}
+smp_size = floor(0.70 * nrow(df))
+smp_size
+set.seed(123)
+train_ind = sample(seq_len(nrow(df)),size = smp_size)  
+train = df[train_ind,]
+sample_train = df[-train_ind,]  
+```
+
+
+```{r log_reg}
+mylogit <- glm(loan_status_Fully_Paid ~ ., data = sample_train, family = "binomial")
+```
+
+
+```{r log_stepwise}
+mylogit.step = stepAIC(mylogit, direction = "forward")
+```
+
+```{r select_features}
+# select if z value is < .05
+features_keep = summary(mylogit.step)$coefficients[,"Pr(>|z|)", drop=FALSE]
+zfeatures = as.data.frame(features_keep)
+zfeatures = subset(zfeatures, `Pr(>|z|)` < .05)
+zfeatures
+```
+
+```{r rerun_reg}
+train_31 = subset(train, select = c(rownames(zfeatures), 'loan_status_Fully_Paid'))
+mylogit <- glm(loan_status_Fully_Paid ~ ., data = train_31, family = "binomial")
+```
+
+
+```{r rerun_reg}
+summary(mylogit) 
+```
+
+```{r predict_test_and_train}
+# I disagree and think correlation is the best metric because Hosmer and Lemeshow goodness of fit (GOF) test not great with large data sets.
+cor(train_31$loan_status_Fully_Paid, fitted(mylogit))^2
+
+```
+
+```{r predict_holdout}
+predict_sample = predict.glm(mylogit, sample_train, type = "response")
+cor(sample_train$loan_status_Fully_Paid, predict_sample)^2
+```
+
+```{r predict_test}
+
+df = data.frame(read.csv("test.csv"))
+test_31 = subset(df, select = c(rownames(zfeatures), 'y_percent_return_over_investment', 'loan_status_Fully_Paid'))
+test_31['predicted_values'] =  predict.glm(mylogit, test_31, type = "response")
+head(test_31)
+```
+
+```{r export_coef}
+
+write.csv(summary(mylogit)$coefficients, "logit_coefs.csv")
+write.csv(test_31, "test_with_predicted.csv")
+```
