@@ -63,11 +63,12 @@ if "merged_files.csv" not in all_csv_filenames:
     # merge split tables back together
     df = pd.concat([df_object, df_float, df_int], axis=1, sort=False)
 
-    # calculate percentage gained over life of loan
-    df['y_percent_return_over_investment'] = ((36 * df['installment'] / df['funded_amnt']) * df['loan_status_Fully Paid'])
+    # calculate percentage gained over life of loan, will calculate in R
+    df['percent_return_over_investment'] = ((36 * df['installment'] / df['funded_amnt']) * df['loan_status_Fully Paid'])
 
     # drop negative return values, doesn't make sense if loan was paid off
-    df = df[df['y_percent_return_over_investment'] >= 0]
+    df = df[df['percent_return_over_investment'] >= 0]
+    df.drop(columns=['percent_return_over_investment'], inplace=True)
 
     # drop unnecessary column
     df.drop(columns=['loan_status_Charged Off'], inplace=True)
@@ -81,5 +82,18 @@ if "merged_files.csv" not in all_csv_filenames:
     # split train and test dfs
     train, test = train_test_split(df, test_size=0.30, random_state=0)
 
+    # change cwd and save to R file
+    os.chdir("..")
+    os.chdir(os.path.abspath(os.curdir) + '/R_files/')
+
     train.to_csv("train.csv", index=False)
     test.to_csv("test.csv", index=False)
+
+
+# original data statistics
+all_csv_filenames = [i for i in glob.glob('*.{}'.format('csv'))]
+all_csv_filenames.remove('merged_files.csv')
+df = pd.concat([pd.read_csv(f) for f in all_csv_filenames])
+print(df.describe)
+# count of NaNs
+print(df.isnull().sum().sum())
