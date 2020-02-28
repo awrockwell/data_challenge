@@ -1,5 +1,28 @@
 DATA CHALLENGE
--
+
+![Slide 1](https://github.com/awrockwell/data_challenge/tree/master/images/Slide1.PNG)
+
+![Slide 2](https://github.com/awrockwell/data_challenge/tree/master/images/Slide2.PNG)
+
+![Slide 3](https://github.com/awrockwell/data_challenge/tree/master/images/Slide3.PNG)
+
+![Slide 4](https://github.com/awrockwell/data_challenge/tree/master/images/Slide4.PNG)
+
+![Slide 5](https://github.com/awrockwell/data_challenge/tree/master/images/Slide5.PNG)
+
+![Slide 6](https://github.com/awrockwell/data_challenge/tree/master/images/Slide6.PNG)
+
+![Slide 7](https://github.com/awrockwell/data_challenge/tree/master/images/Slide7.PNG)
+
+![Slide 8](https://github.com/awrockwell/data_challenge/tree/master/images/Slide8.PNG)
+
+![Slide 9](https://github.com/awrockwell/data_challenge/tree/master/images/Slide9.PNG)
+
+![Slide 10](https://github.com/awrockwell/data_challenge/tree/master/images/Slide10.PNG)
+
+![Slide 11](https://github.com/awrockwell/data_challenge/tree/master/images/Slide11.PNG)
+
+![Slide 12](https://github.com/awrockwell/data_challenge/tree/master/images/Slide12.PNG)
 
 Thank you for your interest in Data Science at Brightside! The next step in the process is 
 a data challenge. The goal for us is to get an understanding of how you approach and think about
